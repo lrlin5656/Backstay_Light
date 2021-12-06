@@ -72,13 +72,14 @@ struct BackStayLED : Service::LightBulb{
     lampPower=new Characteristic::On();      // instantiate the On Characteristic and save it as lampPower
     this->lampPin=lampPin;                   // save the pin number for the hypothetical relay
     pinMode(lampPin,OUTPUT);                 // configure the pin as an output using the standard Arduino pinMode function                       
+    pinMode(LED_BUILTIN,OUTPUT);
     
   } // end constructor()
   
   boolean update(){                          // update() method
 
     digitalWrite(lampPin,lampPower->getNewVal());      // use standard Arduino digitalWrite function to change the ledPin to either high or low based on the value requested by HomeKit
-   
+    digitalWrite(LED_BUILTIN, lampPower->getNewVal());
     return(true);                            // return true to let HomeKit (and the Home App Client) know the update was successful
   
   } // end update()
@@ -87,7 +88,6 @@ struct BackStayLED : Service::LightBulb{
 
 //==================================================================================================================================
 // default code : 466-37-726
-
 void setup() {                // Your HomeSpan code should be placed within the standard Arduino setup() function
  
   Serial.begin(115200);       // Start a serial connection so you can receive HomeSpan diagnostics and control the device using HomeSpan's Command-Line Interface (CLI)
@@ -134,7 +134,7 @@ void setup() {                // Your HomeSpan code should be placed within the 
 //    new Service::LightBulb();                       // Create the Light Bulb Service
 //      new Characteristic::On();                       // This Service requires the "On" Characterstic to turn the light on and off
 
-  new BackStayLED(LED_BUILTIN);
+  new BackStayLED(15);
 
   // That's all that's needed to define a database from scratch, including all required HAP elements, to control a single lightbulb.
   // Of course this sketch does not yet contain any code to implement the actual operation of the light - there is nothing to
